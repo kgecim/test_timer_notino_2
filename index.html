@@ -30,19 +30,19 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-ser
   <section class="trackers" id="trackers">
     <div class="tracker" data-id="bachelor" onclick="toggle('bachelor')">
       <span class="name">Bachelor Finishen</span>
-      <div class="right"><span class="time" id="t-bachelor">00:00:00</span><div class="dot"></div></div>
+      <div class="right"><span class="time" id="t-bachelor">00:00</span><div class="dot"></div></div>
     </div>
     <div class="tracker" data-id="startup" onclick="toggle('startup')">
       <span class="name">StartUp Gründen</span>
-      <div class="right"><span class="time" id="t-startup">00:00:00</span><div class="dot"></div></div>
+      <div class="right"><span class="time" id="t-startup">00:00</span><div class="dot"></div></div>
     </div>
     <div class="tracker" data-id="Backyard" onclick="toggle('Backyard')">
       <span class="name">Backyard 24h</span>
-      <div class="right"><span class="time" id="t-Backyard">00:00:00</span><div class="dot"></div></div>
+      <div class="right"><span class="time" id="t-Backyard">00:00</span><div class="dot"></div></div>
     </div>
     <div class="tracker" data-id="curiosity" onclick="toggle('curiosity')">
       <span class="name">Curiosity</span>
-      <div class="right"><span class="time" id="t-curiosity">00:00:00</span><div class="dot"></div></div>
+      <div class="right"><span class="time" id="t-curiosity">00:00</span><div class="dot"></div></div>
     </div>
   </section>
 </main>
@@ -52,27 +52,22 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-ser
  const ids=["bachelor","startup","Backyard","curiosity"];
  const today=()=>new Date().toDateString();
  let state={date:today(),active:null,sec:{bachelor:0,startup:0,Backyard:0,curiosity:0}};
-
  try{
    const saved=JSON.parse(localStorage.getItem(KEY));
    if(saved&&saved.date===today())state=saved;
  }catch(e){}
-
  const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}};
- const fmt=s=>`${String(Math.floor(s/3600)).padStart(2,"0")}:${String(Math.floor((s%3600)/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;
-
+ const fmt=s=>`${String(Math.floor(s/3600)).padStart(2,"0")}:${String(Math.floor((s%3600)/60)).padStart(2,"0")}`;
  function render(){
    ids.forEach(id=>{
      document.getElementById(`t-${id}`).textContent=fmt(state.sec[id]);
      document.querySelector(`[data-id="${id}"]`).classList.toggle("active",state.active===id);
    });
  }
-
  window.toggle=id=>{
    state.active=state.active===id?null:id;
    save();render();
  };
-
  setInterval(()=>{
    if(state.date!==today()){
      state={date:today(),active:null,sec:{bachelor:0,startup:0,Backyard:0,curiosity:0}};
@@ -83,7 +78,6 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-ser
      document.getElementById(`t-${state.active}`).textContent=fmt(state.sec[state.active]);
    }
  },1000);
-
  render();
 })();
 </script>
