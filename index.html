@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Time Tracker</title>
+<style>
+:root{color-scheme:dark;--bg:#100d16;--panel:#191321;--line:#382640;--text:#f6eff8;--muted:#a99bad;--pink:#f18acb;--purple:#a78bfa}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:transparent}
+body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text)}
+.widget{width:100%;max-width:290px;padding:5px;margin:0 auto}
+.trackers{display:grid;gap:5px}
+.tracker{min-height:34px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:6px 9px;border:1px solid var(--line);border-radius:8px;background:var(--panel);cursor:pointer}
+.tracker.active{border-color:#68405f;background:#211827}
+.name{font-size:11px;font-weight:550;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tracker.active .name{color:var(--pink)}
+.right{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.time{font-size:10px;font-weight:600;color:var(--muted);font-variant-numeric:tabular-nums}
+.tracker.active .time{color:#cbb9ce}
+.dot{width:8px;height:8px;border-radius:50%;background:#382640;border:1px solid #806b87}
+.tracker.active .dot{background:var(--pink);border-color:var(--pink)}
+@media(prefers-reduced-motion:no-preference){.tracker,.dot{transition:background .15s,border-color .15s}}
+</style>
+</head>
+<body>
+<main class="widget">
+  <section class="trackers" id="trackers">
+    <div class="tracker" data-id="bachelor" onclick="toggle('bachelor')">
+      <span class="name">Bachelor Finishen</span>
+      <div class="right"><span class="time" id="t-bachelor">00:00:00</span><div class="dot"></div></div>
+    </div>
+    <div class="tracker" data-id="startup" onclick="toggle('startup')">
+      <span class="name">StartUp Gründen</span>
+      <div class="right"><span class="time" id="t-startup">00:00:00</span><div class="dot"></div></div>
+    </div>
+    <div class="tracker" data-id="curiosity" onclick="toggle('curiosity')">
+      <span class="name">Curiosity</span>
+      <div class="right"><span class="time" id="t-curiosity">00:00:00</span><div class="dot"></div></div>
+    </div>
+    <div class="tracker" data-id="other" onclick="toggle('other')">
+      <span class="name">Deep Work</span>
+      <div class="right"><span class="time" id="t-other">00:00:00</span><div class="dot"></div></div>
+    </div>
+  </section>
+</main>
+<script>
+(()=>{
+ const KEY="notion-sidebar-timer-v1";
+ const ids=["bachelor","startup","curiosity","other"];
+ const today=()=>new Date().toDateString();
+ let state={date:today(),active:null,sec:{bachelor:0,startup:0,curiosity:0,other:0}};
+
+ try{
+   const saved=JSON.parse(localStorage.getItem(KEY));
+   if(saved&&saved.date===today())state=saved;
+ }catch(e){}
+
+ const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}};
+ const fmt=s=>`${String(Math.floor(s/3600)).padStart(2,"0")}:${String(Math.floor((s%3600)/60)).padStart(2,"0")}:${String(s%60).padStart(2,"0")}`;
+
+ function render(){
+   ids.forEach(id=>{
+     document.getElementById(`t-${id}`).textContent=fmt(state.sec[id]);
+     document.querySelector(`[data-id="${id}"]`).classList.toggle("active",state.active===id);
+   });
+ }
+
+ window.toggle=id=>{
+   state.active=state.active===id?null:id;
+   save();render();
+ };
+
+ setInterval(()=>{
+   if(state.date!==today()){
+     state={date:today(),active:null,sec:{bachelor:0,startup:0,curiosity:0,other:0}};
+     save();render();
+   }else if(state.active){
+     state.sec[state.active]++;
+     save();
+     document.getElementById(`t-${state.active}`).textContent=fmt(state.sec[state.active]);
+   }
+ },1000);
+
+ render();
+})();
+</script>
+</body>
+</html>
