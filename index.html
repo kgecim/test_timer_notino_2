@@ -34,9 +34,9 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-ser
       <span class="name">StartUp Gründen</span>
       <div class="right"><span class="time" id="t-startup">00:00:00</span><div class="dot"></div></div>
     </div>
-    <div class="tracker" data-id="backyard" onclick="toggle('backyard')">
-      <span class="name">backyard 24h</span>
-      <div class="right"><span class="time" id="t-backyard">00:00:00</span><div class="dot"></div></div>
+    <div class="tracker" data-id="Backyard" onclick="toggle('Backyard')">
+      <span class="name">Backyard 24h</span>
+      <div class="right"><span class="time" id="t-Backyard">00:00:00</span><div class="dot"></div></div>
     </div>
     <div class="tracker" data-id="curiosity" onclick="toggle('curiosity')">
       <span class="name">Curiosity</span>
@@ -47,9 +47,9 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-ser
 <script>
 (()=>{
  const KEY="notion-sidebar-timer-v2";
- const ids=["bachelor","startup","backyard","curiosity"];
+ const ids=["bachelor","startup","Backyard","curiosity"];
  const today=()=>new Date().toDateString();
- let state={date:today(),active:null,sec:{bachelor:0,startup:0,backyard:0,curiosity:0}};
+ let state={date:today(),active:null,sec:{bachelor:0,startup:0,Backyard:0,curiosity:0}};
 
  try{
    const saved=JSON.parse(localStorage.getItem(KEY));
@@ -73,7 +73,7 @@ body{font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-ser
 
  setInterval(()=>{
    if(state.date!==today()){
-     state={date:today(),active:null,sec:{bachelor:0,startup:0,backyard:0,curiosity:0}};
+     state={date:today(),active:null,sec:{bachelor:0,startup:0,Backyard:0,curiosity:0}};
      save();render();
    }else if(state.active){
      state.sec[state.active]++;
